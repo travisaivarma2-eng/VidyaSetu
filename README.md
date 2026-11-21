@@ -78,7 +78,3 @@ Demo accounts are loaded in the `seed()` function in `server.py`. Change them be
 
 Built for a hackathon by **N. Shivanand Reddy**, **T. Ravi Sai Varma**, and **Md. Rehan**.
 Update this section with your real team names and roles.
-
-## License
-
-MIT License
