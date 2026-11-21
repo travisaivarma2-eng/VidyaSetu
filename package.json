@@ -1,0 +1,13 @@
+{
+  "name": "vidyasetu-3d-login",
+  "version": "1.0.0",
+  "description": "Unified 3D Multi-Portal Authentication Gateway (School, Parent, Student)",
+  "main": "index.html",
+  "scripts": {
+    "start": "python server.py",
+    "dev": "python server.py"
+  },
+  "keywords": ["3d", "edtech", "portal", "login", "school", "parent", "student"],
+  "author": "VidyaSetu",
+  "license": "MIT"
+}

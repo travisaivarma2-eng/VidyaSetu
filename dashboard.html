@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VidyaSetu | Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body.dash { max-width: 1000px; margin: 0 auto; padding: 18px 20px 40px; display: flex; flex-direction: column; gap: 16px; }
+    body.dash::before {
+      content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background: radial-gradient(600px 400px at 85% -5%, var(--theme-glow), transparent 70%),
+                  radial-gradient(500px 400px at 0% 100%, var(--theme-glow), transparent 70%);
+    }
+    .top, .panel, .stats, #content { position: relative; z-index: 2; }
+    .top {
+      display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;
+      background: var(--card-bg); border: 1px solid var(--border-glass); border-radius: 18px; padding: 12px 16px;
+      backdrop-filter: blur(16px);
+    }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .logo {
+      width: 42px; height: 42px; border-radius: 12px; background: var(--theme-gradient);
+      display: flex; align-items: center; justify-content: center; font-size: 20px;
+      box-shadow: 0 8px 20px -6px var(--theme-glow);
+    }
+    .top h2 { font-size: 18px; font-weight: 900; }
+    .top small { color: #94a3b8; font-size: 12px; display: block; margin-top: 1px; }
+    .btn {
+      padding: 9px 16px; border-radius: 12px; border: 1px solid var(--theme-primary);
+      background: transparent; color: var(--theme-primary); cursor: pointer; font-weight: 800; font-size: 13px;
+      transition: all .2s ease;
+    }
+    .btn:hover { background: var(--theme-glow); }
+    .btn.solid { background: var(--theme-gradient); color: #040914; border: none; }
+    #content { display: flex; flex-direction: column; gap: 16px; }
+
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; }
+    .stat { background: var(--card-bg); border: 1px solid var(--border-glass); border-radius: 16px; padding: 14px 16px; }
+    .stat span { font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: .04em; }
+    .stat b { display: block; font-size: 28px; font-weight: 900; margin-top: 4px; }
+    .stat.good b { color: #34d399; } .stat.warn b { color: #fbbf24; } .stat.bad b { color: #f87171; }
+
+    .panel { background: var(--card-bg); border: 1px solid var(--border-glass); border-radius: 20px; padding: 18px 20px; backdrop-filter: blur(16px); }
+    .panel h3 { margin-bottom: 10px; color: var(--theme-primary); font-size: 15px; font-weight: 900; }
+    .row { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,.06); font-size: 14px; }
+    .row:last-child { border-bottom: none; }
+    .row .sub { color: #94a3b8; font-size: 12px; white-space: nowrap; }
+    .empty { color: #64748b; font-size: 13px; padding: 8px 0; }
+
+    .chips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+    .chip { font-size: 11px; font-weight: 800; padding: 4px 9px; border-radius: 20px; border: 1px solid; }
+    .chip.present { color: #34d399; border-color: rgba(52,211,153,.5); background: rgba(52,211,153,.08); }
+    .chip.late { color: #fbbf24; border-color: rgba(251,191,36,.5); background: rgba(251,191,36,.08); }
+    .chip.absent { color: #f87171; border-color: rgba(248,113,113,.5); background: rgba(248,113,113,.08); }
+    .chip.none { color: #94a3b8; border-color: rgba(148,163,184,.3); }
+    .bar { height: 8px; border-radius: 8px; background: rgba(255,255,255,.08); overflow: hidden; margin-top: 8px; }
+    .bar i { display: block; height: 100%; background: var(--theme-gradient); border-radius: 8px; }
+
+    .mark { display: flex; gap: 6px; }
+    .mark button {
+      border: 1px solid rgba(255,255,255,.15); background: rgba(255,255,255,.04); color: #cbd5e1;
+      border-radius: 9px; padding: 5px 10px; font-size: 12px; font-weight: 800; cursor: pointer;
+    }
+    .mark button:hover { border-color: var(--theme-primary); color: var(--theme-primary); }
+    .scroll { overflow-x: auto; }
+
+    form.hw { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; align-items: end; }
+    form.hw label { font-size: 11px; font-weight: 800; color: #94a3b8; display: block; margin-bottom: 4px; }
+    form.hw input {
+      width: 100%; background: rgba(10,15,26,.85); border: 1px solid rgba(255,255,255,.12); border-radius: 11px;
+      padding: 9px 11px; color: #fff; font-size: 13px; outline: none;
+    }
+    form.hw input:focus { border-color: var(--theme-primary); }
+
+    .error-box { text-align: center; padding: 40px 20px; }
+    .error-box h3 { color: #f87171; font-size: 20px; margin-bottom: 8px; }
+    .error-box p { color: #94a3b8; font-size: 14px; margin-bottom: 16px; line-height: 1.5; }
+    .skeleton { height: 90px; border-radius: 18px; background: linear-gradient(90deg, rgba(255,255,255,.04), rgba(255,255,255,.09), rgba(255,255,255,.04)); background-size: 200% 100%; animation: shimmer 1.4s infinite; }
+    @keyframes shimmer { to { background-position: -200% 0; } }
+  </style>
+</head>
+<body class="dash">
+  <div class="top">
+    <div class="brand">
+      <div class="logo" id="logo">🏫</div>
+      <div><h2 id="title">Loading…</h2><small id="subtitle">VidyaSetu 360</small></div>
+    </div>
+    <button class="btn" onclick="logout()">Log out</button>
+  </div>
+
+  <div id="content"><div class="skeleton"></div><div class="skeleton"></div></div>
+
+  <div class="toast-popup" id="toast" role="status">
+    <div style="font-size:22px;" id="toastIcon">✨</div>
+    <div><h5 id="toastTitle" style="font-size:13px;font-weight:900;color:#fff;"></h5><p id="toastDesc" style="font-size:11px;color:#94a3b8;"></p></div>
+  </div>
+
+  <script>
+    const el = document.getElementById('content');
+    const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const rows = (items, fn) => (items && items.length ? items.map(fn).join('') : '<div class="empty">Nothing yet</div>');
+    const chip = (status) => `<span class="chip ${esc(status || 'none')}">${esc(status || 'not marked')}</span>`;
+    const att = (a) => `<div class="row"><span>Attendance (last 30 days)</span><b>${a.percent ?? '–'}${a.percent == null ? '' : '%'}</b></div>` +
+      (a.percent == null ? '' : `<div class="bar"><i style="width:${Math.min(100, a.percent)}%"></i></div>`) +
+      `<div class="chips">${(a.recent || []).map((r) => `<span class="chip ${esc(r.status)}" title="${esc(r.date)}">${esc(r.date.slice(5))} · ${esc(r.status)}</span>`).join('') || '<span class="empty">No records yet</span>'}</div>`;
+    const hw = (h) => rows(h, (x) => `<div class="row"><span>${esc(x.subject)}: ${esc(x.title)}</span><span class="sub">due ${esc(x.due_date)}</span></div>`);
+
+    let toastTimer;
+    function toast(title, desc, bad) {
+      document.getElementById('toastTitle').textContent = title;
+      document.getElementById('toastDesc').textContent = desc;
+      document.getElementById('toastIcon').textContent = bad ? '⚠️' : '✨';
+      const t = document.getElementById('toast');
+      t.classList.toggle('error', !!bad);
+      t.classList.add('visible');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove('visible'), 3200);
+    }
+
+    async function call(path, body) {
+      let res;
+      try {
+        res = await fetch(path, body === undefined ? {} : { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+      } catch { throw Object.assign(new Error('Cannot reach the server.'), { network: true }); }
+      if (res.status === 401) { location.href = 'index.html'; throw new Error('Please log in'); }
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || 'Something went wrong');
+      return data;
+    }
+
+    async function logout() {
+      try { await fetch('/api/auth/logout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' }); } catch {}
+      location.href = 'index.html';
+    }
+
+    function setTheme(portal) {
+      const root = document.documentElement;
+      for (const k of ['primary', 'secondary', 'glow', 'gradient']) root.style.setProperty(`--theme-${k}`, `var(--${portal}-${k})`);
+      document.getElementById('logo').textContent = { school: '🏫', parent: '👨‍👩‍👧', student: '🚀' }[portal];
+    }
+
+    function showError(msg, network) {
+      el.innerHTML = `<div class="panel error-box"><h3>${network ? 'Cannot reach the server' : 'Something went wrong'}</h3>
+        <p>${esc(msg)}${network ? '<br>Make sure the black window running <b>python server.py</b> is still open, and that you opened this page from <b>http://localhost:3000</b>.' : ''}</p>
+        <button class="btn solid" onclick="load()">Try again</button></div>`;
+    }
+
+    // ---------- school ----------
+    function renderSchool(d, students) {
+      setTheme('school');
+      const canEdit = d.role === 'admin' || d.role === 'teacher';
+      const a = d.today_attendance;
+      document.getElementById('title').textContent = 'Institution Console';
+      document.getElementById('subtitle').textContent = `${d.name} · ${({ admin: 'Admin', teacher: 'Teacher', hod: 'HOD / Dean' })[d.role] || d.role}`;
+      el.innerHTML = `
+        <div class="stats">
+          <div class="stat"><span>Students</span><b>${d.students}</b></div>
+          <div class="stat"><span>Staff</span><b>${d.staff}</b></div>
+          <div class="stat good"><span>Present today</span><b>${a.present}</b></div>
+          <div class="stat warn"><span>Late today</span><b>${a.late}</b></div>
+          <div class="stat bad"><span>Absent today</span><b>${a.absent}</b></div>
+        </div>
+        <div class="panel"><h3>Today's attendance ${canEdit ? '' : '<span class="sub" style="font-weight:600">(view only)</span>'}</h3>
+          <div class="scroll">${rows(students, (s) => `<div class="row">
+            <span><b>${esc(s.name)}</b> <span class="sub">Class ${s.class_no}-${esc(s.section)} · Roll ${s.roll_no} · ${esc(s.admission_no)}</span></span>
+            <span style="display:flex;gap:10px;align-items:center">${chip(s.today)}
+              ${canEdit ? `<span class="mark"><button onclick="mark(${s.id},'present')">P</button><button onclick="mark(${s.id},'late')">L</button><button onclick="mark(${s.id},'absent')">A</button></span>` : ''}
+            </span></div>`)}</div>
+          ${canEdit ? '<div class="sub" style="margin-top:8px;color:#64748b;font-size:11px">P = present, L = late, A = absent. Parents get an alert when you mark.</div>' : ''}
+        </div>
+        <div class="panel"><h3>Upcoming homework</h3>${rows(d.upcoming_homework, (x) =>
+          `<div class="row"><span>Class ${x.class_no}-${esc(x.section)} ${esc(x.subject)}: ${esc(x.title)}</span><span class="sub">${esc(x.due_date)}</span></div>`)}</div>
+        ${canEdit ? `<div class="panel"><h3>Assign homework</h3>
+          <form class="hw" onsubmit="addHomework(event)">
+            <div><label>Class</label><input name="class_no" type="number" min="1" max="12" required></div>
+            <div><label>Section</label><input name="section" maxlength="3" required placeholder="A"></div>
+            <div><label>Subject</label><input name="subject" required></div>
+            <div><label>Title</label><input name="title" required></div>
+            <div><label>Due date</label><input name="due_date" type="date" required></div>
+            <button class="btn solid" type="submit">Add</button>
+          </form></div>` : ''}`;
+    }
+
+    async function mark(id, status) {
+      try { await call('/api/attendance', { student_id: id, status }); toast('Saved', `Marked ${status}. Parent alerted.`); load(true); }
+      catch (e) { toast('Could not save', e.message, true); }
+    }
+
+    async function addHomework(ev) {
+      ev.preventDefault();
+      const f = Object.fromEntries(new FormData(ev.target));
+      try { await call('/api/homework', { ...f, class_no: Number(f.class_no) }); toast('Homework added', 'Students and parents will see it.'); load(true); }
+      catch (e) { toast('Could not add', e.message, true); }
+    }
+
+    // ---------- parent / student ----------
+    function renderParent(d) {
+      setTheme('parent');
+      document.getElementById('title').textContent = 'Parent Dashboard';
+      document.getElementById('subtitle').textContent = `Welcome, ${d.name || 'Guardian'}`;
+      el.innerHTML = (d.children.length ? d.children.map((k) => `<div class="panel"><h3>${esc(k.name)} <span class="sub" style="font-weight:600">· Class ${esc(k.class)} · Roll ${k.roll_no}</span></h3>
+          ${att(k.attendance)}<h3 style="margin-top:16px">Homework</h3>${hw(k.homework)}</div>`).join('')
+        : '<div class="panel"><div class="empty">No child is linked to this account yet. Please contact the Admin\'s Office.</div></div>') +
+        `<div class="panel"><h3>Alerts</h3>${rows(d.notifications, (n) => `<div class="row"><span>${esc(n.message)}</span><span class="sub">${esc(n.created_at)}</span></div>`)}</div>`;
+    }
+
+    function renderStudent(d) {
+      setTheme('student');
+      document.getElementById('title').textContent = `Hi ${d.name} 🚀`;
+      document.getElementById('subtitle').textContent = `Class ${d.class} · ${d.tier}`;
+      el.innerHTML = `<div class="stats">
+          <div class="stat warn"><span>🔥 Streak</span><b>${d.streak} day${d.streak === 1 ? '' : 's'}</b></div>
+          <div class="stat good"><span>Coins</span><b>${d.coins}</b></div>
+          <div class="stat"><span>Attendance</span><b>${d.attendance.percent ?? '–'}${d.attendance.percent == null ? '' : '%'}</b></div>
+        </div>
+        <div class="panel"><h3>Attendance</h3>${att(d.attendance)}</div>
+        <div class="panel"><h3>Homework</h3>${hw(d.homework)}</div>`;
+    }
+
+    async function load(quiet) {
+      if (!quiet) el.innerHTML = '<div class="skeleton"></div><div class="skeleton"></div>';
+      try {
+        const d = await call('/api/dashboard');
+        if (d.portal === 'school') {
+          const s = await call('/api/students');
+          renderSchool(d, s.students);
+        } else if (d.portal === 'parent') renderParent(d);
+        else renderStudent(d);
+      } catch (e) {
+        if (e.message !== 'Please log in') showError(e.message, e.network);
+      }
+    }
+    load();
+  </script>
+</body>
+</html>

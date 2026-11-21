@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VidyaSetu 360 | Login</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="gateway">
+
+  <canvas id="canvas3d"></canvas>
+  <div class="ambient-glow-1"></div>
+  <div class="ambient-glow-2"></div>
+
+  <header>
+    <div class="brand-wrapper" onclick="switchPortal('school')">
+      <div class="brand-logo-3d" id="brandLogo">🏫</div>
+      <div class="brand-text">
+        <h2>VidyaSetu <span class="brand-badge" id="brandBadge">Institutional ERP</span></h2>
+      </div>
+    </div>
+
+    <div class="portal-dock">
+      <button id="dock-school" class="dock-btn active" onclick="switchPortal('school')">🏫 School / College</button>
+      <button id="dock-parent" class="dock-btn" onclick="switchPortal('parent')">👨‍👩‍👧 Parent / Guardian</button>
+      <button id="dock-student" class="dock-btn" onclick="switchPortal('student')">🎓 Student Portal</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="layout-grid">
+
+      <!-- LEFT: hero text (changes with the portal) -->
+      <div class="hero-copy">
+        <div id="copy-school">
+          <div class="pill-status"><span class="pulse-dot"></span><span>Spatial Institutional Gateway</span></div>
+          <h1>Next-Gen ERP for <span>Schools &amp; Colleges</span>.</h1>
+          <p>Centralized control center for principals, teachers, administrators and professors. Real-time attendance, homework control, instant parent alerts and student analytics.</p>
+          <div class="feature-cards-row">
+            <div class="feature-card"><h4>⚡ Smart Attendance</h4><p>Mark once, parents are alerted instantly.</p></div>
+            <div class="feature-card"><h4>📊 Class Insights</h4><p>Homework and attendance for every class at a glance.</p></div>
+          </div>
+        </div>
+
+        <div id="copy-parent" class="hidden">
+          <div class="pill-status"><span class="pulse-dot"></span><span>Real-Time Child Safety Radar</span></div>
+          <h1>Complete Clarity on Your <span>Child's Growth</span>.</h1>
+          <p>No more anxious calls to the school reception. Get attendance alerts, track pending homework and stay close to your child's progress, anytime.</p>
+          <div class="feature-cards-row">
+            <div class="feature-card"><h4>🔔 Instant Alerts</h4><p>Know the moment your child is marked present or absent.</p></div>
+            <div class="feature-card"><h4>📚 Homework Tracker</h4><p>See what is due and when.</p></div>
+          </div>
+        </div>
+
+        <div id="copy-student" class="hidden">
+          <div class="pill-status"><span class="pulse-dot"></span><span>Adaptive 3D Learning Universe</span></div>
+          <h1>Level Up Your Grades: <span>Foundation to JEE/NEET</span>.</h1>
+          <p>Personalized dashboards: story lessons (Class 1-8), board PYQs (Class 9-10) and NTA-style practice with HC Verma (Class 11-12).</p>
+          <div class="feature-cards-row">
+            <div class="feature-card"><h4>🌟 Class 1–8: Foundation</h4><p>Animated concepts and gamified quizzes.</p></div>
+            <div class="feature-card"><h4>🚀 Class 11–12: JEE/NEET</h4><p>Mock tests and daily practice sheets.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: login card -->
+      <div class="card-3d-wrapper">
+        <div class="card-3d" id="tiltCard">
+          <div class="glass-glare"></div>
+
+          <!-- ============ SCHOOL / COLLEGE ============ -->
+          <div id="form-school" class="portal-form">
+            <div class="card-header">
+              <div><h3>Institutional Access</h3><p>Sign in with your faculty email or mobile number</p></div>
+              <div class="icon-badge-3d">🏛️</div>
+            </div>
+
+            <span class="tiny-label">Designation role</span>
+            <div class="sub-role-grid">
+              <button type="button" id="role-admin" class="sub-role-btn active" onclick="setSchoolRole('admin')">🛡️ Admin</button>
+              <button type="button" id="role-teacher" class="sub-role-btn" onclick="setSchoolRole('teacher')">🧑‍🏫 Teacher</button>
+              <button type="button" id="role-hod" class="sub-role-btn" onclick="setSchoolRole('hod')">🎖️ HOD/Dean</button>
+            </div>
+
+            <form class="auth-form" novalidate onsubmit="handleLoginSubmit(event, 'school')">
+              <div class="form-group">
+                <label for="s-code">Institution Code</label>
+                <div class="input-box-wrapper"><input id="s-code" type="text" autocomplete="organization" placeholder="e.g. DPS-DEL-2026"></div>
+              </div>
+              <div class="form-group">
+                <label for="s-id">Email or Mobile Number</label>
+                <div class="input-box-wrapper"><input id="s-id" type="text" autocomplete="username" placeholder="name@institution.edu.in or 10-digit mobile"></div>
+              </div>
+              <div class="form-group">
+                <div class="label-row">
+                  <label for="s-pass">Password</label>
+                  <button type="button" class="link-btn" onclick="openForgot('school')">Forgot password?</button>
+                </div>
+                <div class="input-box-wrapper has-eye">
+                  <input id="s-pass" type="password" autocomplete="current-password" placeholder="Your password">
+                  <button type="button" class="eye-btn" onclick="togglePw(this)" aria-label="Show password">👁️</button>
+                </div>
+              </div>
+              <button type="submit" class="btn-submit-3d"><span>Enter Institutional Console →</span></button>
+            </form>
+          </div>
+
+          <!-- ============ PARENT / GUARDIAN ============ -->
+          <div id="form-parent" class="portal-form hidden">
+            <div class="card-header">
+              <div><h3>Parent Guardian Radar</h3><p>Track your child's attendance &amp; homework</p></div>
+              <div class="icon-badge-3d">👨‍👩‍👧</div>
+            </div>
+
+            <div class="sub-role-grid two">
+              <button type="button" id="p-mode-otp" class="sub-role-btn active" onclick="setParentAuthMode('otp')">💬 Mobile OTP</button>
+              <button type="button" id="p-mode-pwd" class="sub-role-btn" onclick="setParentAuthMode('pwd')">🔑 Email / ID + Password</button>
+            </div>
+
+            <form class="auth-form" novalidate onsubmit="handleLoginSubmit(event, 'parent')">
+              <div id="p-view-otp" class="auth-form">
+                <div class="form-group">
+                  <label for="p-mobile">Registered Guardian Mobile Number</label>
+                  <div class="inline-row">
+                    <span class="prefix">🇮🇳 +91</span>
+                    <div class="input-box-wrapper"><input id="p-mobile" type="tel" inputmode="numeric" maxlength="10" autocomplete="tel-national" placeholder="10-digit number"></div>
+                    <button type="button" id="otp-btn" class="ghost-btn" onclick="requestOtp()">Get OTP</button>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="label-row">
+                    <label>Enter 4-digit OTP</label>
+                    <span id="otp-timer" class="muted" style="font-size:10px"></span>
+                  </div>
+                  <div class="otp-container input-box-wrapper" style="position:static">
+                    <input type="text" inputmode="numeric" maxlength="1" class="otp-box" aria-label="OTP digit 1">
+                    <input type="text" inputmode="numeric" maxlength="1" class="otp-box" aria-label="OTP digit 2">
+                    <input type="text" inputmode="numeric" maxlength="1" class="otp-box" aria-label="OTP digit 3">
+                    <input type="text" inputmode="numeric" maxlength="1" class="otp-box" aria-label="OTP digit 4">
+                  </div>
+                </div>
+                <div class="label-row">
+                  <span class="muted" style="font-size:11px">Number changed or not getting OTP?</span>
+                  <button type="button" class="link-btn" onclick="openContact()">Contact Admin's Office</button>
+                </div>
+              </div>
+
+              <div id="p-view-pwd" class="auth-form hidden">
+                <div class="form-group">
+                  <label for="p-id">Email, Mobile or Child's Admission No.</label>
+                  <div class="input-box-wrapper"><input id="p-id" type="text" autocomplete="username" placeholder="e.g. DPS-2024-884"></div>
+                </div>
+                <div class="form-group">
+                  <div class="label-row">
+                    <label for="p-pass">Password / Admission Key</label>
+                    <button type="button" class="link-btn" onclick="openForgot('parent')">Forgot password?</button>
+                  </div>
+                  <div class="input-box-wrapper has-eye">
+                    <input id="p-pass" type="password" autocomplete="current-password" placeholder="Your password">
+                    <button type="button" class="eye-btn" onclick="togglePw(this)" aria-label="Show password">👁️</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="info-chip"><span>After login you will see every child linked to your number.</span><b>🔒 Secure</b></div>
+              <button type="submit" class="btn-submit-3d"><span>Access Live Child Telemetry →</span></button>
+            </form>
+          </div>
+
+          <!-- ============ STUDENT ============ -->
+          <div id="form-student" class="portal-form hidden">
+            <div class="card-header">
+              <div><h3>Student Launchpad</h3><p>Adaptive 3D Universe personalized to your class</p></div>
+              <div class="icon-badge-3d">🚀</div>
+            </div>
+
+            <span class="tiny-label">Select class tier</span>
+            <div class="sub-role-grid">
+              <button type="button" id="tier-18" class="sub-role-btn" onclick="setStudentTier('1-8')">Class 1–8<small>Foundation</small></button>
+              <button type="button" id="tier-910" class="sub-role-btn" onclick="setStudentTier('9-10')">Class 9 &amp; 10<small>Boards</small></button>
+              <button type="button" id="tier-1112" class="sub-role-btn active" onclick="setStudentTier('11-12')">Class 11 &amp; 12<small>JEE / NEET</small></button>
+            </div>
+
+            <form class="auth-form" novalidate onsubmit="handleLoginSubmit(event, 'student')">
+              <div class="form-group">
+                <label for="st-id">Roll No, Handle, Email or Mobile</label>
+                <div class="input-box-wrapper"><input id="st-id" type="text" autocomplete="username" placeholder="e.g. ravi.sai or 10-digit mobile"></div>
+              </div>
+              <div class="form-group" id="stream-selector-group">
+                <label for="st-stream">Target Stream</label>
+                <div class="input-box-wrapper">
+                  <select id="st-stream">
+                    <option value="JEE">⚡ JEE (Main &amp; Advanced) PCM</option>
+                    <option value="NEET">🩺 NEET (UG) Medical PCB</option>
+                    <option value="BOARD">📚 CBSE / State Board Focus</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="label-row">
+                  <label for="st-pass">Password / PIN</label>
+                  <button type="button" class="link-btn" onclick="openForgot('student')">Forgot password?</button>
+                </div>
+                <div class="input-box-wrapper has-eye">
+                  <input id="st-pass" type="password" autocomplete="current-password" placeholder="Your password">
+                  <button type="button" class="eye-btn" onclick="togglePw(this)" aria-label="Show password">👁️</button>
+                </div>
+              </div>
+              <div class="info-chip"><span>🔥 Log in daily to grow your streak</span><b>+100 coins / day</b></div>
+              <button type="submit" class="btn-submit-3d"><span>Enter 3D Study Universe →</span></button>
+            </form>
+          </div>
+
+          <!-- ============ FORGOT PASSWORD: step 1 ============ -->
+          <div id="view-forgot" class="portal-form hidden">
+            <div class="card-header">
+              <div><h3>Forgot Password?</h3><p id="forgot-sub">We'll send a 6-digit code to your registered mobile or email</p></div>
+              <div class="icon-badge-3d">🔐</div>
+            </div>
+            <form class="auth-form" novalidate onsubmit="sendResetCode(event)">
+              <div class="form-group" id="f-inst-group">
+                <label for="f-inst">Institution Code</label>
+                <div class="input-box-wrapper"><input id="f-inst" type="text" placeholder="e.g. DPS-DEL-2026"></div>
+              </div>
+              <div class="form-group">
+                <label for="f-id" id="f-id-label">Registered Email or Mobile</label>
+                <div class="input-box-wrapper"><input id="f-id" type="text" placeholder="Email or 10-digit mobile"></div>
+              </div>
+              <button type="submit" class="btn-submit-3d"><span>Send Reset Code →</span></button>
+              <div class="back-row">
+                <button type="button" class="link-btn" onclick="backToLogin()">← Back to login</button>
+                <button type="button" class="link-btn" onclick="openContact()">I don't remember any of these</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- ============ FORGOT PASSWORD: step 2 ============ -->
+          <div id="view-reset" class="portal-form hidden">
+            <div class="card-header">
+              <div><h3>Set New Password</h3><p id="reset-sub">Enter the code we sent you</p></div>
+              <div class="icon-badge-3d">🔑</div>
+            </div>
+            <form class="auth-form" novalidate onsubmit="confirmReset(event)">
+              <div id="dev-note" class="dev-note hidden"></div>
+              <div class="form-group">
+                <label for="r-code">6-digit code</label>
+                <div class="input-box-wrapper"><input id="r-code" class="code-input" type="text" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="••••••"></div>
+              </div>
+              <div class="form-group">
+                <label for="r-new">New password</label>
+                <div class="input-box-wrapper has-eye">
+                  <input id="r-new" type="password" autocomplete="new-password" placeholder="Min 8 characters, letters + numbers">
+                  <button type="button" class="eye-btn" onclick="togglePw(this)" aria-label="Show password">👁️</button>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="r-new2">Confirm new password</label>
+                <div class="input-box-wrapper has-eye">
+                  <input id="r-new2" type="password" autocomplete="new-password" placeholder="Type it again">
+                  <button type="button" class="eye-btn" onclick="togglePw(this)" aria-label="Show password">👁️</button>
+                </div>
+              </div>
+              <button type="submit" class="btn-submit-3d"><span>Update Password →</span></button>
+              <div class="back-row">
+                <button type="button" class="link-btn" onclick="openForgot()">← Use a different account</button>
+                <button type="button" class="link-btn" onclick="openContact()">Didn't get a code?</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- ============ CONTACT ADMIN'S OFFICE ============ -->
+          <div id="view-contact" class="portal-form hidden">
+            <div class="contact-view">
+              <div class="contact-icon">🏢</div>
+              <h3>Contact to your Admin's Office!!</h3>
+              <p class="muted">We couldn't verify you online, so only the school can reset your access.</p>
+              <div class="contact-steps">
+                <div>1️⃣ Visit the Admin's Office during working hours.</div>
+                <div>2️⃣ Carry your ID card (students: admission number, parents: your child's admission number).</div>
+                <div>3️⃣ Ask them to update your mobile / email or reset your password.</div>
+              </div>
+              <button type="button" class="btn-submit-3d" onclick="backToLogin()"><span>← Back to login</span></button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <div class="toast-popup" id="toast" role="status" aria-live="polite">
+    <div style="font-size:22px;" id="toastIcon">✨</div>
+    <div>
+      <h5 id="toastTitle" style="font-size:13px; font-weight:900; color:#fff;"></h5>
+      <p id="toastDesc" style="font-size:11px; color:#94a3b8;"></p>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2026 VidyaSetu 360 Ecosystem. Multi-Role Institutional Security Layer.</p>
+    <div style="display:flex; gap:14px;">
+      <a href="#" onclick="openContact(); return false;">Campus Helpdesk</a>
+      <span>•</span>
+      <a href="#">Privacy Policy</a>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
