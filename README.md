@@ -78,3 +78,7 @@ Demo accounts are loaded in the `seed()` function in `server.py`. Change them be
 
 Built for a hackathon by **N. Shivanand Reddy**, **T. Ravi Sai Varma**, and **Md. Rehan**.
 Update this section with your real team names and roles.
+
+## Live Website
+https://vidyasetu-student.netlify.app/
+This Website is Used By Netlify Hostings
